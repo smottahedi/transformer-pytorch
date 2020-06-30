@@ -2,7 +2,7 @@
 
 import torch
 import torch.nn as nn
-
+import math
 
 def masked_softmax(inputs, valid_len):
     """masked-softmax function."""
@@ -40,6 +40,6 @@ class DotProductAttention(nn.Module):
 
     def forward(self, query, key, value, valid_len=None): # pylint: disable=arguments-differ
         dim = query.shape[-1]
-        score = torch.bmm(query, key.transpose(1, 2)) / torch.sqrt(dim)
+        score = torch.bmm(query, key.transpose(1, 2)) / math.sqrt(dim)
         attention_weights = self.dropout(masked_softmax(score, valid_len))
         return torch.bmm(attention_weights, value)
