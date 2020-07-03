@@ -12,7 +12,7 @@ def masked_softmax(inputs, valid_len):
 
     shape = inputs.shape
     if valid_len.dim() == 1:
-        valid_len = torch.repeat_interleave(valid_len,
+        valid_len = torch.repeat_interleave(valid_len, # pylint: disable=no-member
                                             repeats=shape[0],
                                             dim=0)
     else:
@@ -40,6 +40,6 @@ class DotProductAttention(nn.Module):
 
     def forward(self, query, key, value, valid_len=None): # pylint: disable=arguments-differ
         dim = query.shape[-1]
-        score = torch.bmm(query, key.transpose(1, 2)) / math.sqrt(dim)
+        score = torch.bmm(query, key.transpose(1, 2)) / math.sqrt(dim) # pylint: disable=no-member
         attention_weights = self.dropout(masked_softmax(score, valid_len))
-        return torch.bmm(attention_weights, value)
+        return torch.bmm(attention_weights, value) # pylint: disable=no-member
