@@ -14,5 +14,4 @@ class PositionWiseFFN(nn.Module):
 
     def forward(self, inputs):
         out_1 = self.dense1(inputs)
-        print(out_1.shape)
         return F.relu(self.dense2(out_1))

@@ -10,7 +10,7 @@ class PositionalEncoding(nn.Module):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(dropout)
         self.pos = torch.zeros((1, max_len, num_hiddens)) # pylint: disable=no-member
-        index = torch.arange(0, max_len).reshape(-1, 1).div(torch.pow( # pylint: disable=no-member
+        index = torch.arange(0, max_len).reshape(-1, 1).true_divide(torch.pow( # pylint: disable=no-member
             1000, torch.arange(0, num_hiddens, 2) / num_hiddens))# pylint: disable=no-member
         self.pos[:, :, 0::2] = torch.sin(index.float()) # pylint: disable=no-member
         self.pos[:, :, 1::2] = torch.cos(index.float()) # pylint: disable=no-member
