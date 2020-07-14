@@ -31,7 +31,7 @@ class MultiheadAttention(nn.Module):
             if valid_len.ndim == 1:
                 valid_len = valid_len.repeat(self.num_heads)
             else:
-                valid_len = valid_len(self.num_heads, 1)
+                valid_len = valid_len.repeat(self.num_heads, 1)
 
         output = self.attention(query, key, value, valid_len)
         # (batch_size * num_heads, seq_len, num_hiddens / num_heads)
