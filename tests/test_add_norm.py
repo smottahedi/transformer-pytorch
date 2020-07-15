@@ -11,7 +11,7 @@ class TestAddNorm(unittest.TestCase):
     def setUp(self):
         self.input_a = torch.ones(2, 3, 4) # pylint: disable=no-member
         self.input_b = torch.ones(2, 3, 4) # pylint: disable=no-member
-        self.add_norm = AddNorm(3, 4, 0.5)
+        self.add_norm = AddNorm(4, 0.5)
 
     def test_add_and_norm(self):
         output = self.add_norm(self.input_a, self.input_b)

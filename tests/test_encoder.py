@@ -14,7 +14,7 @@ class TestEncoder(unittest.TestCase):
         dropout = 0.5
         attention = DotProductAttention(dropout)
         self.encoder = EncoderBlock(embed_dim=24, num_hiddens=24, 
-                                    seq_len=100, ffn_num_hiddens=48,
+                                    ffn_num_hiddens=48,
                                     num_heads=8, attention=attention,
                                     dropout=dropout, use_bias=False)
 
