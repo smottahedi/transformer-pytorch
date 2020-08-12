@@ -56,28 +56,28 @@ class DecoderBlock(nn.Module):
 
 
 class TransformerDecoder(nn.Module):
-    def __init__(self, vocab_size, embed_dim, num_hiddens, ffn_num_hiddens,
+    def __init__(self, embedding, vocab_size, num_hiddens, ffn_num_hiddens,
                  num_heads, num_layers, dropout, **kwargs):
         super(TransformerDecoder, self).__init__(**kwargs)
         self.num_hiddens = num_hiddens
         self.num_layers = num_layers
-        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        self.embedding = embedding
         self.pos_encoding = PositionalEncoding(num_hiddens, dropout)
         self.blks = nn.ModuleList([])
         for i in range(num_layers):
             self.blks.append(
-                DecoderBlock(embed_dim, num_hiddens,
+                DecoderBlock(self.embedding.get_output_dim(), num_hiddens,
                              ffn_num_hiddens, num_heads, dropout, i)
             )
 
         self.dense = nn.Linear(num_hiddens, vocab_size)
 
-    def init_state(self, enc_outputs, env_valid_len, *args):
+    def init_state(self, enc_outputs, env_valid_len=None, *args):
         return [enc_outputs, env_valid_len, [None] * self.num_layers]
 
     def forward(self, inputs, state):
         inputs = self.pos_encoding(
-            self.embedding(inputs.long()) * math.sqrt(self.num_hiddens)
+            self.embedding(inputs) * math.sqrt(self.num_hiddens)
         )
 
         for blk in self.blks:

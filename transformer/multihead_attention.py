@@ -1,5 +1,6 @@
 """"Multi-head Attention implementation"""
 
+import torch
 import torch.nn as nn
 
 
@@ -29,7 +30,7 @@ class MultiheadAttention(nn.Module):
 
         if valid_len is not None:
             if valid_len.ndim == 1:
-                valid_len = valid_len.repeat(self.num_heads)
+                valid_len = torch.tensor(valid_len, dtype=torch.int32).repeat(self.num_heads)
             else:
                 valid_len = valid_len.repeat(self.num_heads, 1)
 

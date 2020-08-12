@@ -6,11 +6,10 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-torch = "*"
-torchvision = "*"
+allennlp = "*"
 pytorch-lightning = "*"
-ipython = "*"
 pylint = "*"
+wandb = "*"
 autopep8 = "*"
 
 [requires]

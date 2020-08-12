@@ -33,23 +33,21 @@ class EncoderBlock(nn.Module):
 class TransformerEncoder(nn.Module):
     """Transformer Encoder"""
 
-    def __init__(self, vocab_size, embed_dim, num_hiddens, ffn_num_hiddens,
+    def __init__(self, embedding, num_hiddens, ffn_num_hiddens,
                  num_heads, num_layers, dropout, use_bias=False, **kwargs):
         super(TransformerEncoder, self).__init__(**kwargs)
         self.num_hiddens = num_hiddens
-        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        self.embedding = embedding
         self.pos_encoding = PositionalEncoding(num_hiddens, dropout)
-
         self.blks = nn.ModuleList([])
         for _ in range(num_layers):
             self.blks.append(
-                EncoderBlock(embed_dim, num_hiddens, ffn_num_hiddens, num_heads, DotProductAttention(dropout),
+                EncoderBlock(self.embedding.get_output_dim(), num_hiddens, ffn_num_hiddens, num_heads, DotProductAttention(dropout),
                              dropout, use_bias)
             )
 
-    def forward(self, inputs, valid_len, *args):
-        inputs = self.pos_encoding(self.embedding(inputs.long()) * math.sqrt(self.num_hiddens))
+    def forward(self, inputs, valid_len=None, *args):
+        outputs = self.pos_encoding(self.embedding(inputs) * math.sqrt(self.num_hiddens))
         for blk in self.blks:
-            inputs = blk(inputs, valid_len)
-        return inputs
-
+            outputs = blk(outputs, valid_len)
+        return outputs

@@ -10,18 +10,19 @@ def masked_softmax(inputs, valid_len):
     if valid_len is None:
         return nn.functional.softmax(inputs, dim=-1)
 
-    shape = inputs.shape
-    if valid_len.dim() == 1:
-        valid_len = torch.repeat_interleave(valid_len, # pylint: disable=no-member
-                                            repeats=shape[1],
-                                            dim=0)
     else:
-        valid_len = valid_len.reshape(-1)
+        shape = inputs.shape
+        if valid_len.dim() == 1:
+            valid_len = torch.repeat_interleave(valid_len, # pylint: disable=no-member
+                                                repeats=shape[1],
+                                                dim=0)
+        else:
+            valid_len = valid_len.reshape(-1)
 
-    inputs = inputs.reshape(-1, shape[-1])    
-    for count, row in enumerate(inputs):
-        row[int(valid_len[count]):] = -1e6
-    return nn.functional.softmax(inputs.reshape(shape), dim=-1)
+        output = inputs.reshape(-1, shape[-1]).clone()
+        for count, row in enumerate(output):
+            row[int(valid_len[count]):] = -1e6
+        return nn.functional.softmax(inputs.reshape(shape), dim=-1)
 
 
 
